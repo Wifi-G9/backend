@@ -1,7 +1,11 @@
 #!/bin/bash
 
-if [ -f pip_installs.txt ]; then
-    pip install -r pip_installs.txt
+FILENAME="packages.txt"
+
+python -m pip install --upgrade pip
+
+if [ -f $FILENAME ]; then
+    pip install -r $FILENAME
 else
-    echo "pip_installs.txt file not found."
+    echo "File '$FILENAME' not found."
 fi
