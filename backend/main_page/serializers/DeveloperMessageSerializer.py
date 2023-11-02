@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from backend.user_page.models.DeveloperMessage import DeveloperMessage
+from main_page.models.DeveloperMessage import DeveloperMessage
 
 
 class DeveloperMessageSerializer(serializers.ModelSerializer):

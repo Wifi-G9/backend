@@ -1,6 +1,6 @@
 from django.db import models
 
-from backend.user_page.models.User import User
+from main_page.models.User import User
 
 
 class DeveloperMessage(models.Model):
