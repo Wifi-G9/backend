@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from backend.user_page.models.User import User
+from main_page.models.User import User
 
 
 class UserSerializer(serializers.ModelSerializer):
