@@ -2,3 +2,5 @@
 /backend/venv
 /backend/.idea
 /backend/**/__pycache__
+my_env
+.idea
