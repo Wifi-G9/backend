@@ -3,7 +3,7 @@ from django.views import View
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
-from ..models.SearchHistory import SearchHistory
+from ..models.search_history import SearchHistory
 
 API_DICTIONARY = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 

@@ -1,10 +1,8 @@
 from django.db import models
 
-from main_page.models.Accounts import Accounts
-
+from main_page.models.accounts import Accounts
 
 class User(models.Model):
-    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     age = models.IntegerField()
     email = models.CharField(max_length=100, unique=True)
