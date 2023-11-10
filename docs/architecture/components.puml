@@ -1,0 +1,75 @@
+@startuml
+
+scale .5
+
+package "Backend App" {
+  [GoogleImageView]
+  [ChatGPTView]
+  [SentimentAnalysisView]
+  [DeezerView]
+  [SimilarTrendsView]
+  [PostDescriptionView]
+}
+
+package "External APIs" {
+  [ChatGptAPI]
+  [SentimentAnalysisAPI]
+  [DeezerAPI]
+  [GoogleImageAPI]
+  [PyTrendsAPI]
+}
+
+note top of [GoogleImageView]
+  GoogleImageView - View for displaying Google Images
+end note
+
+note top of [ChatGPTView]
+  ChatGPTView - View for interacting with ChatGPT
+end note
+
+note top of [SentimentAnalysisView]
+  SentimentAnalysisView - View for analyzing sentiment
+end note
+
+note top of [DeezerView]
+  DeezerView - View for integrating with Deezer
+end note
+
+note top of [SimilarTrendsView]
+  SimilarTrendsView - View for displaying similar trends
+end note
+
+note top of [PostDescriptionView]
+  PostDescriptionView - View for handling post descriptions
+end note
+
+note bottom of [ChatGptAPI]
+  ChatGptAPI - External API for ChatGPT interactions
+end note
+
+note bottom of [SentimentAnalysisAPI]
+  SentimentAnalysisAPI - External API for sentiment analysis
+end note
+
+note bottom of [DeezerAPI]
+  DeezerAPI - External API for Deezer integration
+end note
+
+note bottom of [GoogleImageAPI]
+  GoogleImageAPI - External API for Google Image operations
+end note
+
+note bottom of [PyTrendsAPI]
+  PyTrendsAPI - External API for PyTrends interactions
+end note
+
+[GoogleImageView] --> [GoogleImageAPI] : Calls
+[ChatGPTView] --> [ChatGptAPI] : Calls
+[SentimentAnalysisView] --> [SentimentAnalysisAPI] : Calls
+[DeezerView] --> [DeezerAPI] : Calls
+[SimilarTrendsView] --> [PyTrendsAPI] : Calls
+
+[GoogleImageView] --> [PostDescriptionView]
+'[PostDescriptionView] --> [ExternalAPI] : Calls
+
+@enduml
