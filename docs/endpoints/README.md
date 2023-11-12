@@ -249,7 +249,7 @@ Content-Type: application/json
 }
 ```
 
-**Interest Over Time**
+## Interest Over Time
 
 * **Endpoint:** `/interest-over-time`
 * **Method:** GET
@@ -385,5 +385,25 @@ Content-Type: application/json
       "interest": 15
     }
   ]
+}
+```
+
+## Search
+
+* **Endpoint:** `/search`
+* **Method:** GET
+* **Request body:** JSON object with the following fields:
+    * `query`: The search term add to word of the day statistic.
+
+* **Response body:** 404 if the word does not belong to the dictionary, 200 if the search is valid
+
+* **Example request:**
+
+```
+GET /search HTTP/1.1
+Content-Type: application/json
+
+{
+"query": "artificial intelligence",
 }
 ```
