@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 
 from main_page.views.word_search_view import WordSearch
 from main_page.views.instagram_search_view import InstagramSearch
+from main_page.views.chatgpt_description_view import ChatGPTDescription
 
 
 class MainPageView(APIView):
@@ -16,9 +17,16 @@ class MainPageView(APIView):
         if word_searched.status_code == 404:
             return word_searched
 
+        word_searched_data=word_searched.data["word_searched"]
+        description: Response = ChatGPTDescription.as_view()(request,word_searched_data)
+
+        if description.status_code != 200:
+            return description
+
         aggregated_data = {
             **word_searched.data,
-            **instagram_search.data
+            **instagram_search.data,
+            **description.data,
         }
 
         return Response(aggregated_data, status=status.HTTP_200_OK)
