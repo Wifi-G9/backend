@@ -117,5 +117,69 @@ Example usage for `generate_word_of_the_day`:
 
 ```sql
 EXEC generate_word_of_the_day;
+```
+
+# Django Model Factories Documentation
+
+## UserFactory
+
+### Description
+- Creates instances of the `User` model with fake data.
+
+### Fields
+- `name`: Fake name.
+- `age`: Fake random integer between 18 and 99.
+- `email`: Fake email.
+- `password`: Fake password.
+
+## AccountsFactory
+
+### Description
+- Creates instances of the `Accounts` model with fake data.
+
+### Fields
+- `user`: A sub-factory instance of `UserFactory`.
+- `instagram_access_token`: Fake UUID for Instagram access.
+- `twitter_access_token`: Fake UUID for Twitter access.
+- `facebook_access_token`: Fake UUID for Facebook access.
+
+## DeveloperMessageFactory
+
+### Description
+- Creates instances of the `DeveloperMessage` model with fake data.
+
+### Fields
+- `user`: A sub-factory instance of `UserFactory`.
+- `message`: Fake text for the message.
+- `timestamp`: Fake date and time within the current year.
+
+## SearchHistoryFactory
+
+### Description
+- Creates instances of the `SearchHistory` model with fake data.
+
+### Fields
+- `user`: A sub-factory instance of `UserFactory`.
+- `timestamp`: Fake date and time within the current year.
+- `search_query`: Fake word for the search query.
+
+## WordHistoryFactory
+
+### Description
+- Creates instances of the `WordHistory` model with fake data.
+
+### Fields
+- `word`: Fake word.
+- `timestamp`: Fake date and time within the current year.
+
+## WordOfTheDayFactory
+
+### Description
+- Creates instances of the `WordOfTheDay` model with fake data.
+
+### Fields
+- `word`: Fake word.
+- `timestamp`: Fake date and time within the current year.
+
 
  
