@@ -18,7 +18,7 @@ class WordSearch(View):
             {
                 "word_search": "word" if word exists else "Not found"
             },
-            status_code: int = 200 if word exists else 400
+            status_code: int = 200 if word exists else 404
         )
         """
         word_searched = request.query_params.get("search", None)
