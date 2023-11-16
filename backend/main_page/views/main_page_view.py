@@ -3,6 +3,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from main_page.views.sentiment_analysis import SentimentAnalysis
 from main_page.views.word_search_view import WordSearch
 from main_page.views.instagram_search_view import InstagramSearch
 from main_page.views.similar_trends import SimilarTrends
@@ -14,6 +15,7 @@ from main_page.views.chatgpt_description_view import ChatGPTDescription
 class MainPageView(APIView):
     @staticmethod
     def get(request: Request) -> Response:
+        # Use WordSearch view to get initial data
         word_searched: Response = WordSearch.as_view()(request)
         instagram_search: Response = InstagramSearch.as_view()(request)
         similar_trends: Response = SimilarTrends.as_view()(request)
