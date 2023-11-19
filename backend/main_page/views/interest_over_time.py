@@ -1,4 +1,4 @@
-from django.views import View
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -6,7 +6,7 @@ from pytrends.request import TrendReq
 from datetime import date, timedelta
 
 
-class InterestOverTime(View):
+class InterestOverTime(APIView):
     @staticmethod
     def get(request: Request) -> Response:
         """
@@ -29,7 +29,8 @@ class InterestOverTime(View):
             pytrends = TrendReq(hl='en-US', tz=360)
             pytrends.build_payload(kw_list=[word_searched],
                                    timeframe=f'{date.today() - timedelta(weeks=weeks)} {date.today()}')
-            interest_over_time = [interest for interest in pytrends.interest_over_time()[word_searched]]
+            response = pytrends.interest_over_time()[word_searched]
+            interest_over_time = [interest for interest in response]
         except KeyError:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
 

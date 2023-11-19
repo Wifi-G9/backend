@@ -1,11 +1,11 @@
-from django.views import View
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from pytrends.request import TrendReq
 
 
-class SimilarTrends(View):
+class SimilarTrends(APIView):
     @staticmethod
     def get(request: Request) -> Response:
         """
@@ -25,7 +25,8 @@ class SimilarTrends(View):
             pytrends = TrendReq(hl='en-US', tz=360)
             kw_list = [word_searched]
             pytrends.build_payload(kw_list, cat=0, timeframe='today 5-y', geo='', gprop='')
-            similar_trends = [trends for trends in pytrends.related_topics()[word_searched]['top']['topic_title'][:5]]
+            response = pytrends.related_topics()[word_searched]['top']['topic_title'][:5]
+            similar_trends = [trends for trends in response]
         except KeyError:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
 

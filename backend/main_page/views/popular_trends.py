@@ -1,11 +1,11 @@
-from django.views import View
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from pytrends.request import TrendReq
 
 
-class PopularTrends(View):
+class PopularTrends(APIView):
     @staticmethod
     def get(request: Request) -> Response:
         """
@@ -21,7 +21,8 @@ class PopularTrends(View):
         """
         try:
             pytrends = TrendReq(hl='en-US', tz=360)
-            popular_trends = [trends for trends in pytrends.realtime_trending_searches(pn='US')["title"][:5]]
+            response = pytrends.realtime_trending_searches(pn='US')["title"][:5]
+            popular_trends = [trends for trends in response]
         except KeyError:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
 

@@ -1,15 +1,14 @@
 import os
 import requests
 from rest_framework import status
-
-from django.views import View
+from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 API_HOST = "text-analysis12.p.rapidapi.com"
 
 
-class SentimentAnalysis(View):
+class SentimentAnalysis(APIView):
     @staticmethod
     def get(request: Request) -> Response:
         """
