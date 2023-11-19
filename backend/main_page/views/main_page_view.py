@@ -36,7 +36,7 @@ class MainPageView(APIView):
 
         aggregated_data = {
             **word_searched.data,
-            **instagram_search.data,
+            # **instagram_search.data,
             **description.data,
             **similar_trends.data,
             **popular_trends.data,

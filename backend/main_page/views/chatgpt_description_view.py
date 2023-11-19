@@ -1,3 +1,4 @@
+import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -35,15 +36,19 @@ class ChatGPTDescription(APIView):
         :param word: str
         :return: str
         """
-        client = OpenAI()
+        # client = OpenAI()
+        # prompt = f"Describe the {word} in maximum 100 words"
+        #
+        # response = client.chat.completions.create(
+        #     model="gpt-3.5-turbo",
+        #     messages=[
+        #         {"role": "user", "content": prompt}
+        #     ]
+        # )
+        client = OpenAI(api_key=os.environ.get("OPENAI_KEY"))
         prompt = f"Describe the {word} in maximum 100 words"
 
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
+        response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
 
         description = response['choices'][0]['message']['content'].strip()
 
