@@ -20,5 +20,4 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     path('', include('main_page.main_page_urls')),
-    path('admin/', admin.site.urls),
 ]
