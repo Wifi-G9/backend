@@ -21,14 +21,19 @@ class MainPageView(APIView):
         similar_trends: Response = SimilarTrends.as_view()(request)
         popular_trends: Response = PopularTrends.as_view()(request)
         interest_over_time: Response = InterestOverTime.as_view()(request)
+        sentiment_analysis = SentimentAnalysis().as_view()(request)
+
+        word_searched_data = word_searched.data["word_searched"]
+        description: Response = ChatGPTDescription.as_view()(request, word_searched_data)
 
         if word_searched.status_code == 404:
             return word_searched
 
-        description: Response = ChatGPTDescription.as_view()(request)
-
         if description.status_code != 200:
             return description
+
+        if sentiment_analysis.status_code == 404:
+            return sentiment_analysis
 
         aggregated_data = {
             **word_searched.data,

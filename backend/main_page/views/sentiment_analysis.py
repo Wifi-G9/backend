@@ -1,31 +1,49 @@
+import os
 import requests
-from rest_framework.views import APIView
+from rest_framework import status
 
-from django.urls import reverse
+from rest_framework.views import View
+from rest_framework.request import Request
+from rest_framework.response import Response
 
-class SentimentAnalysis(APIView):
-    @staticmethod
-    def get_sentiment(text):
+API_HOST = "text-analysis12.p.rapidapi.com"
+
+
+class SentimentAnalysis(View):
+    def get(self, request: Request) -> Response:
         """
         Calls the Sentiment Analysis API and returns the sentiment analysis result.
-        :param text: str
+        :param request: request
         :return: Tuple[str, int]
         """
-        # Use reverse to get the full URL with scheme and domain
-        api_sentiment_analysis_url = reverse('sentiment_analysis')
-        payload = {'text': text}
-        response = requests.get(api_sentiment_analysis_url, params=payload)
 
-        if response.status_code == 200:
-            sentiment_result = response.json().get('sentiment', None)
-            return sentiment_result, 200
-        else:
-            return None, response.status_code
+        api_key = os.environ.get("RAPID_API_KEY")
+        if api_key is None:
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
 
-    def process_sentiment_analysis(self, text):
-        sentiment_analysis, status_code = self.get_sentiment(text)
+        text = request.query_params.get("text")
+        if text is None:
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
 
-        if status_code == 200:
-            return sentiment_analysis
-        else:
-            return f"Error in sentiment analysis API (Status Code: {status_code})"
+        url = "https://text-analysis12.p.rapidapi.com/sentiment-analysis/api/v1.1"
+        payload = {
+            "language": "english",
+            "text": text
+        }
+        headers = {
+            "content-type": "application/json",
+            "X-RapidAPI-Key": api_key,
+            "X-RapidAPI-Host": API_HOST
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+
+        response_json = response.json()
+        overall_sentiment = response_json["sentiment"]
+        sentiment_score = response_json["aggregate_sentiment"]["compound"]
+        result_json = {
+            "sentiment": overall_sentiment,
+            "score": sentiment_score
+        }
+
+        return Response(result_json, status=status.HTTP_200_OK)
