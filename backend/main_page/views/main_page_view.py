@@ -23,13 +23,13 @@ class MainPageView(APIView):
         sentiment_analysis: Response = SentimentAnalysis.as_view()(request)
 
         word_searched_data = word_searched.data["word_searched"]
-        description: Response = ChatGPTDescription.as_view()(request, word_searched_data)
+        chatgpt_description: Response = ChatGPTDescription.as_view()(request, word_searched_data)
 
         if word_searched.status_code == 404:
             return word_searched
 
-        if description.status_code != 200:
-            return description
+        if chatgpt_description.status_code != 200:
+            return chatgpt_description
 
         if sentiment_analysis.status_code == 404:
             return sentiment_analysis
@@ -37,7 +37,7 @@ class MainPageView(APIView):
         aggregated_data = {
             **word_searched.data,
             # **instagram_search.data,
-            **description.data,
+            **chatgpt_description.data,
             **similar_trends.data,
             **popular_trends.data,
             **interest_over_time.data,
