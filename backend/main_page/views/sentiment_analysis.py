@@ -2,7 +2,7 @@ import os
 import requests
 from rest_framework import status
 
-from rest_framework.views import View
+from django.views import View
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -10,7 +10,8 @@ API_HOST = "text-analysis12.p.rapidapi.com"
 
 
 class SentimentAnalysis(View):
-    def get(self, request: Request) -> Response:
+    @staticmethod
+    def get(request: Request) -> Response:
         """
         Calls the Sentiment Analysis API and returns the sentiment analysis result.
         :param request: request
@@ -21,7 +22,7 @@ class SentimentAnalysis(View):
         if api_key is None:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
 
-        text = request.query_params.get("text")
+        text = request.query_params.get("text", None)
         if text is None:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
 

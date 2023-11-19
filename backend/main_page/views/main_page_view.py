@@ -15,13 +15,12 @@ from main_page.views.chatgpt_description_view import ChatGPTDescription
 class MainPageView(APIView):
     @staticmethod
     def get(request: Request) -> Response:
-        # Use WordSearch view to get initial data
         word_searched: Response = WordSearch.as_view()(request)
         instagram_search: Response = InstagramSearch.as_view()(request)
         similar_trends: Response = SimilarTrends.as_view()(request)
         popular_trends: Response = PopularTrends.as_view()(request)
         interest_over_time: Response = InterestOverTime.as_view()(request)
-        sentiment_analysis = SentimentAnalysis().as_view()(request)
+        sentiment_analysis: Response = SentimentAnalysis.as_view()(request)
 
         word_searched_data = word_searched.data["word_searched"]
         description: Response = ChatGPTDescription.as_view()(request, word_searched_data)
@@ -42,6 +41,7 @@ class MainPageView(APIView):
             **similar_trends.data,
             **popular_trends.data,
             **interest_over_time.data,
+            **sentiment_analysis.data,
         }
 
         return Response(aggregated_data, status=status.HTTP_200_OK)
