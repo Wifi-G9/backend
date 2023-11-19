@@ -1,11 +1,13 @@
 import os
+import openai
 from rest_framework.views import APIView
+
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.request import Request
-from openai import OpenAI
 
 API_OPENAI = "https://api.openai.com/v1/chat/completions"
+CHATGPT_MODEL = "gpt-3.5-turbo"
 
 
 class ChatGPTDescription(APIView):
@@ -21,35 +23,33 @@ class ChatGPTDescription(APIView):
                    status_code: int = 200 if description exists else 404
                )
         """
-        word_searched = request.query_params.get("search", None)
+        word_searched = request.query_params.get("message", None)
         description = self.get_gpt_description(word_searched)
 
-        if not description:
-            return Response({"description": "Description not found"}, status=status.HTTP_404_NOT_FOUND)
+        if description is None:
+            return Response({"response": "Description not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"description": description}, status=status.HTTP_200_OK)
+        return Response({"response": description}, status=status.HTTP_200_OK)
 
     @staticmethod
-    def get_gpt_description(word: str) -> str:
+    def get_gpt_description(word: str) -> str | None:
         """
         Calls OpenAI GPT-3.5-turbo API to generate a description for the given word.
         :param word: str
-        :return: str
+        :return: string | None
         """
-        # client = OpenAI()
-        # prompt = f"Describe the {word} in maximum 100 words"
-        #
-        # response = client.chat.completions.create(
-        #     model="gpt-3.5-turbo",
-        #     messages=[
-        #         {"role": "user", "content": prompt}
-        #     ]
-        # )
-        client = OpenAI(api_key=os.environ.get("OPENAI_KEY"))
+        api_key = os.environ.get("OPENAI_KEY")
+        openai.api_key = api_key
+        if api_key is None:
+            return None
+
         prompt = f"Describe the {word} in maximum 100 words"
+        messages = [{"role": "user", "content": prompt}]
 
-        response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+        response = openai.chat.completions.create(
+            model=CHATGPT_MODEL,
+            messages=messages,
+            temperature=0,
+        )
 
-        description = response['choices'][0]['message']['content'].strip()
-
-        return description
+        return response.choices[0].message.content
