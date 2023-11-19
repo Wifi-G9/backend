@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 
 from main_page.views.word_search_view import WordSearch
 from main_page.views.instagram_search_view import InstagramSearch
+from main_page.views.similar_trends import SimilarTrends
 from main_page.views.chatgpt_description_view import ChatGPTDescription
 
 
@@ -13,12 +14,12 @@ class MainPageView(APIView):
     def get(request: Request) -> Response:
         word_searched: Response = WordSearch.as_view()(request)
         instagram_search: Response = InstagramSearch.as_view()(request)
+        similar_trends: Response = SimilarTrends.as_view()(request)
 
         if word_searched.status_code == 404:
             return word_searched
 
-        word_searched_data=word_searched.data["word_searched"]
-        description: Response = ChatGPTDescription.as_view()(request,word_searched_data)
+        description: Response = ChatGPTDescription.as_view()(request)
 
         if description.status_code != 200:
             return description
@@ -27,6 +28,7 @@ class MainPageView(APIView):
             **word_searched.data,
             **instagram_search.data,
             **description.data,
+            **similar_trends.data,
         }
 
         return Response(aggregated_data, status=status.HTTP_200_OK)
