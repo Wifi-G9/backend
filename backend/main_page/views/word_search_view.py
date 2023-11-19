@@ -1,6 +1,6 @@
 import requests
-from django.views import View
 from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from ..models.search_history import SearchHistory
@@ -8,7 +8,7 @@ from ..models.search_history import SearchHistory
 API_DICTIONARY = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 
 
-class WordSearch(View):
+class WordSearch(APIView):
     def get(self, request: Request) -> Response:
         """
         Function returning word of the day or the searched word verified by api

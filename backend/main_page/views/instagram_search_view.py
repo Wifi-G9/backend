@@ -3,7 +3,7 @@ import os
 import requests
 import json
 import re
-from django.views import View
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -13,7 +13,7 @@ POSTS_NUMBER = 5
 HASHTAG_PATTERN = r'#\w+\b'
 
 
-class InstagramSearch(View):
+class InstagramSearch(APIView):
     def get(self, request: Request) -> Response:
         """
         Function to return top "POSTS_NUMBER" posts from instagram and the data related to them
