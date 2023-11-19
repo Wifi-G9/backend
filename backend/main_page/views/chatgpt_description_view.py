@@ -43,7 +43,7 @@ class ChatGPTDescription(APIView):
         if api_key is None:
             return None
 
-        prompt = f"Describe the {word} in maximum 100 words"
+        prompt = f"Describe the word \"{word}\" in a sentence"
         messages = [{"role": "user", "content": prompt}]
 
         response = openai.chat.completions.create(
