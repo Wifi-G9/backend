@@ -8,7 +8,6 @@ from main_page.views.popular_trends_view import PopularTrends
 from main_page.views.interest_over_time_view import InterestOverTime
 from main_page.views.sentiment_analysis_view import SentimentAnalysis
 
-
 urlpatterns = [
     path('', WordSearch.as_view()),
     path('search-instagram', InstagramSearch.as_view()),
@@ -16,7 +15,8 @@ urlpatterns = [
     path('similar-trends', SimilarTrends.as_view()),
     path('popular-trends', PopularTrends.as_view()),
     path('interest-over-time', InterestOverTime.as_view()),
-    path('sentiment-analysis', SentimentAnalysis.as_view())
+    path('sentiment-analysis', SentimentAnalysis.as_view()),
+    path('sign-up', SignupView.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
