@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 
+
 class SignupView(APIView):
+    @staticmethod
     def post(self, request):
         # Extract necessary fields from headers
         username = request.data.get("username", "")
@@ -24,7 +26,8 @@ class SignupView(APIView):
             return Response({'error': "Username not longer than 10 characters!"}, status=status.HTTP_400_BAD_REQUEST)
 
         if not username.isalnum():
-            return Response({'error': "Only numbers and letters are allowed in the username!"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': "Only numbers and letters are allowed in the username!"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         # Check if email is unique
         if User.objects.filter(email=email).exists():
