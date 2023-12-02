@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from pytrends.request import TrendReq
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 
 class InterestOverTime(APIView):
@@ -34,4 +34,13 @@ class InterestOverTime(APIView):
         except KeyError:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"interest_over_time": interest_over_time}, status=status.HTTP_200_OK)
+        if time_of_interest == "month":
+            date_list = [datetime.now() - timedelta(days=30 * i) for i in range(12)]
+        else:
+            date_list = [datetime.now() - timedelta(days=30 * 12 * i) for i in range(6)]
+        formatted_dates = [ddate.strftime('%Y-%m-%d') for ddate in date_list]
+
+        response_data = [{"interest": interest, "date": current_date} for interest, current_date in
+                         zip(interest_over_time, formatted_dates)]
+
+        return Response({"interest_over_time": response_data}, status=status.HTTP_200_OK)
