@@ -11,6 +11,8 @@ API_HOST = "instagram-api-20231.p.rapidapi.com"
 POSTS_NUMBER = 5
 HASHTAG_PATTERN = r'#\w+\b'
 
+workaround = ""
+
 
 class InstagramSearch(APIView):
     def get(self, request: Request) -> Response:
@@ -23,14 +25,24 @@ class InstagramSearch(APIView):
 
         # if your .env file does not have this key, a mock data for debugging will be sent as the api has a limit on
         # the requests
-        api_key = os.environ.get("RAPID_API_INSTAGRAM_2023_KEY")
+        api_key = os.environ.get("RAPID_API_KEY")
+        # if api_key is None:
         if api_key is None:
-            return Response(self.mock_data(), status=status.HTTP_404_NOT_FOUND)
+            return Response(self.mock_data(), status=status.HTTP_200_OK)
 
         # prepare the data for the request
         query = request.query_params.get("query")
-        if query is None:
+        if query is None or query == "wordOfTheDay":
             return Response(self.mock_data(), status=status.HTTP_404_NOT_FOUND)
+
+        # FIXME: this should not exist, the frontend has a bug and sends like 4 requests per click so if if the query
+        # FIXME: sent is the same, do not process it. Hopefully we will remove this ASAP
+        global workaround
+        if workaround == query:
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            workaround = query
+
         url = f"https://instagram-api-20231.p.rapidapi.com/api/hashtag_media/{query}"
         querystring = {"feed_type": "top"}
 
@@ -47,6 +59,7 @@ class InstagramSearch(APIView):
             result_json = []
 
             for post in posts:
+                print(post)
                 code: str = post["code"]
                 description = post["caption"]["text"]
                 hashtags_list: [str] = re.findall(HASHTAG_PATTERN, description)
