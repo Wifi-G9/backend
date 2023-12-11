@@ -22,7 +22,7 @@ class InstagramSearch(APIView):
         :return Response with data outlined in docs/endpoints/README.md, status code will be 404 if an error has
         occurred or 200 if the data was received and parsed correctly
         """
-
+        return Response(self.mock_data(), status=status.HTTP_200_OK)
         # if your .env file does not have this key, a mock data for debugging will be sent as the api has a limit on
         # the requests
         api_key = os.environ.get("RAPID_API_KEY")
@@ -103,4 +103,55 @@ class InstagramSearch(APIView):
                 "engagement_score": 1500,
                 "image_description": "A person using a computer with a futuristic interface."
             },
+            {
+                "link": "https://www.instagram.com/p/C0HZCaoidDN/",
+                "description": "AI is the future!",
+                "sentiment_analysis": {
+                    "sentiment": "positive",
+                    "score": 0.9
+                },
+                "likes": 1000,
+                "comments": 500,
+                "hashtags": [
+                    "#AI",
+                    "#artificialintelligence",
+                    "#future"
+                ],
+                "engagement_score": 1500,
+                "image_description": "A person using a computer with a futuristic interface."
+            },
+            {
+                "link": "https://www.instagram.com/p/CWQ3456j_rX/",
+                "description": "AI is changing the world.",
+                "sentiment_analysis": {
+                    "sentiment": "positive",
+                    "score": 0.8
+                },
+                "likes": 800,
+                "comments": 400,
+                "hashtags": [
+                    "#AI",
+                    "#artificialintelligence",
+                    "#change"
+                ],
+                "engagement_score": 1200,
+                "image_description": "A group of robots working together in a factory."
+            },
+            {
+                "link": "https://www.instagram.com/p/CWO6789j_rX/",
+                "description": "AI is amazing!",
+                "sentiment_analysis": {
+                    "sentiment": "positive",
+                    "score": 1.0
+                },
+                "likes": 600,
+                "comments": 300,
+                "hashtags": [
+                    "#AI",
+                    "#artificialintelligence",
+                    "#amazing"
+                ],
+                "engagement_score": 900,
+                "image_description": "A child playing with an AI-powered robot."
+            }
         ]}
