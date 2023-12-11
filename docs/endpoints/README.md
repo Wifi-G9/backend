@@ -407,3 +407,163 @@ Content-Type: application/json
 "query": "artificial intelligence",
 }
 ```
+
+# ================= Sprint 2 =================
+
+## Sign Up
+
+* **Endpoint:** `/signup`
+
+* **Method:** POST
+* **Request body:**
+    * `email:` The email that the user provided
+    * `username:` The username provided by the user
+    * `password:` The password provided by the user
+    * `verify_password:` Password confirmation
+* **Response body:**
+    * `message`: User registration successful.
+* **Response body:** 404 if the user exists, 200 if the signup is valid
+* **Example request:**
+ 
+```json
+{
+  "email": "user@example.com",
+  "username": "example_user",
+  "password": "securepassword123",
+  "verify_password": "securepassword123"
+}
+```
+
+* **Example response:**
+```json
+{
+  "message": "Sign-up successful"
+}
+```
+
+## Log In
+
+* **Endpoint:** `/login`
+
+* **Method:** POST
+* **Request body:**
+    * `email:` The email that the user provided
+    * `password:` The password provided by the user
+* **Request body:**
+    * `message`: User login successful.
+* **Response body:** 404 if the user exists, 200 if the signup is valid
+* **Example request:**
+ 
+```json
+{
+  "email": "user@example.com",
+  "password": "securepassword123"
+}
+```
+
+* **Example response:**
+```json
+{
+  "message": "Sign-up successful"
+}
+```
+
+## Image Description API
+
+**Endpoint:** `/<username>/describe-photo`
+* **Method:** POST
+* **Request body:**
+    * `photo:` Base64-encoded image data
+* **Request body:**
+    * `description:` Extracted text description of the image
+* **Request Body:** 200 if the result is correct, 404 if there was an error
+
+* **Example request:**
+```json
+{
+  "photo": "<Base64-encoded image data>"
+}
+```
+* **Example Response:**
+```json
+{
+  "description": "<Extracted text description of the image>"
+}
+```
+
+## Photo description to post description
+
+**Endpoint:** `/<username>/photo-desc-post-desc`
+* **Method:** POST
+* **Request body:**
+    * `description:` Text message from Google photos
+* **Request body:**
+    * `description:` Description message to put on the post description
+* **Request Body:** 200 if the result is correct, 404 if there was an error
+
+* **Example request:**
+```json
+{
+  "description": "Dog running after a ball"
+}
+```
+* **Example Response:**
+```json
+{
+  "description": "Chasing dreams and balls 🐾🎾 Our furry friend in action, embracing the joy of the great outdoors. Every sprint, every leap is a reminder to live life with boundless enthusiasm. 🌳🌞 #DogLife #BallChaser #FurryAdventures"
+}
+```
+
+## Photo description to Deezer song
+
+**Endpoint:** `/<username>/description-deezer`
+**Method:** POST
+* **Request body:**
+    * `description:` Text message from Google photos
+* **Request body:**
+    * `link:` Text with link for a song that matches the description
+* **Request Body:** 200 if the result is correct, 404 if there was an error
+
+* **Example request:**
+```json
+{
+  "photo": "Dog running after a ball"
+}
+```
+* **Example Response:**
+```json
+{
+  "link": "https://www.deezer.com/en/track/83890415"
+}
+```
+
+## Top user posts
+
+Coming soon...
+
+## Posts graph
+
+Coming soon...
+
+## Engagement rate
+
+**Endpoint:** `/<username>/engagement-score`
+**Method:** POST
+* **Request body:**
+    * `user_id:` The instagram id for the user
+* **Request body:**
+    * `score:` Number representing the user engagement score
+* **Request Body:** 200 if the result is correct, 404 if there was an error
+
+* **Example Request:**
+```json
+{
+  "user_id": "908409827482750854725"
+}
+```
+* **Example Response:**
+```json
+{
+  "score": 94
+}
+```
