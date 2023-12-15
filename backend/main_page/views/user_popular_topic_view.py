@@ -3,16 +3,14 @@ from django.views import View
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
 import requests
-
-# Constants for the RapidAPI Instagram Reels feed API
 from rest_framework.views import APIView
+from decouple import config
 
-RAPIDAPI_KEY = "e619c3e4afmsh92c8cabd68cf43cp1bebaejsn15df63d545be"
-RAPIDAPI_HOST = "instagram-data1.p.rapidapi.com"
 
 class InstagramReelsFeed(APIView):
+    RAPIDAPI_KEY = config('RAPIDAPI_KEY')  # Read from environment
+    RAPIDAPI_HOST = config('RAPIDAPI_HOST')
 
     def get(self, request: Request) -> Response:
         user_posts = self.get_user_posts()
@@ -36,18 +34,12 @@ class InstagramReelsFeed(APIView):
 
 
     def get_user_posts(self):
-        # Replace 'INSTAGRAM_ACCESS_TOKEN' with your RapidAPI key
-        access_token = 'YOUR_RAPIDAPI_KEY'
 
-        account_id = 'INSTAGRAM_BUSINESS_ACCOUNT_ID'
-
-        api_version = 'INSTAGRAM_API_VERSION'
-
-        url = f"https://{RAPIDAPI_HOST}/hashtag/feed/reels"
+        url = f"https://{self.RAPIDAPI_HOST}/hashtag/feed/reels"
         querystring = {"hashtag": "summer"}  # Replace with your desired hashtag
         headers = {
-            "X-RapidAPI-Key": RAPIDAPI_KEY,
-            "X-RapidAPI-Host": RAPIDAPI_HOST
+            "X-RapidAPI-Key": self.RAPIDAPI_KEY,
+            "X-RapidAPI-Host": self.RAPIDAPI_HOST
         }
 
         try:
@@ -72,7 +64,7 @@ class InstagramReelsFeed(APIView):
 
     def get_top_posts_from_rapidapi(self, hashtags):
         # Use RapidAPI Instagram Reels feed API to get top posts based on hashtags
-        url = f"https://{RAPIDAPI_HOST}/hashtag/feed/reels"
+        url = f"https://{self.RAPIDAPI_HOST}/hashtag/feed/reels"
 
         # Check if the hashtags set is empty
         if not hashtags:
@@ -81,8 +73,8 @@ class InstagramReelsFeed(APIView):
 
         querystring = {"hashtag": hashtags.pop()}  # Assuming you want to use the first hashtag as the search term
         headers = {
-            "X-RapidAPI-Key": RAPIDAPI_KEY,
-            "X-RapidAPI-Host": RAPIDAPI_HOST
+            "X-RapidAPI-Key": self.RAPIDAPI_KEY,
+            "X-RapidAPI-Host": self.RAPIDAPI_HOST
         }
 
         try:
