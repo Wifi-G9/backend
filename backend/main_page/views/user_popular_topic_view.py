@@ -36,7 +36,7 @@ class InstagramReelsFeed(APIView):
     def get_user_posts(self):
 
         url = f"https://{self.RAPIDAPI_HOST}/hashtag/feed/reels"
-        querystring = {"hashtag": "summer"}  # Replace with your desired hashtag
+        querystring = {"hashtag": "food"}
         headers = {
             "X-RapidAPI-Key": self.RAPIDAPI_KEY,
             "X-RapidAPI-Host": self.RAPIDAPI_HOST
