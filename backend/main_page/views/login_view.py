@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from backend.main_page.models import User
+from main_page.models import User
 
 
 class LoginView(APIView):
@@ -10,7 +10,8 @@ class LoginView(APIView):
     API endpoint for user login.
     """
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         """
         Handle user login.
 

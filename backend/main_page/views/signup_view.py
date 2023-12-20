@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class SignupView(APIView):
     @staticmethod
-    def post(self, request):
+    def post(request):
         # Extract necessary fields from headers
         username = request.data.get("username", "")
         email = request.data.get("email", "")
@@ -37,8 +37,6 @@ class SignupView(APIView):
         # Check if email is unique
         if User.objects.filter(username=username).exists():
             return Response({"error": "Username is already in use"}, status=status.HTTP_400_BAD_REQUEST)
-
-
 
         # Create a new user
         user = User.objects.create_user(username, email, password)
