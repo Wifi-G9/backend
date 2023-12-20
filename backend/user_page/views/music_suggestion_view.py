@@ -5,8 +5,10 @@ from rest_framework import status
 from rest_framework.views import APIView
 import requests
 
+
 class MusicSuggestion(APIView):
-    def get(self, request, *args, **kwargs):
+    @staticmethod
+    def get(request):
         """
         Get top 5 music suggestions based on the provided description.
 
@@ -26,7 +28,7 @@ class MusicSuggestion(APIView):
 
         # Call Deezer API
         headers = {
-            'X-RapidAPI-Key': os.environ.get("DEEZER-KEY")#
+            'X-RapidAPI-Key': os.environ.get("DEEZER-KEY")  #
         }
         deezer_api_url = "https://deezerdevs-deezer.p.rapidapi.com/search"
         params = {'q': description, 'limit': 5}

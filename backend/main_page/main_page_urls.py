@@ -1,5 +1,8 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
+
+from main_page.views.login_view import LoginView
+from main_page.views.signup_view import SignupView
 from main_page.views.word_search_view import WordSearch
 from main_page.views.instagram_search_view import InstagramSearch
 from main_page.views.chatgpt_description_view import ChatGPTDescription
@@ -16,7 +19,8 @@ urlpatterns = [
     path('popular-trends', PopularTrends.as_view()),
     path('interest-over-time', InterestOverTime.as_view()),
     path('sentiment-analysis', SentimentAnalysis.as_view()),
-    path('sign-up', SignupView.as_view()),
+    path('signup', SignupView.as_view()),
+    path('login', LoginView.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
