@@ -8,7 +8,7 @@ import requests
 
 class MusicSuggestion(APIView):
     @staticmethod
-    def get(request):
+    def get(request, username=None):
         """
         Get top 5 music suggestions based on the provided description.
 
