@@ -27,33 +27,43 @@ class UserFeedView(APIView):
                 "user_following": number(int/long),
                 "user_biography": "str",
                 "posts_month": [
-                    [
-                        number(int/long),
-                        number(int/long)
-                    ],
-                    [
-                        number(int/long),
-                        number(int/long)
-                    ],
+                    {
+                        "date": number(int/long),
+                        "likes": number(int/long),
+                        "comments": number(int/long),
+                    },
+                    {
+                        "date": number(int/long),
+                        "likes": number(int/long),
+                        "comments": number(int/long),
+                    },
                     ...
                 ],
                 "posts_year": [
-                    [
-                        number(int/long),
-                        number(int/long)
-                    ],
-                    [
-                        number(int/long),
-                        number(int/long)
-                    ],
+                    {
+                        "date": number(int/long),
+                        "likes": number(int/long),
+                        "comments": number(int/long),
+                    },
+                    {
+                        "date": number(int/long),
+                        "likes": number(int/long),
+                        "comments": number(int/long),
+                    },
                     ...
                 ],
-                "post_url": "https://www.instagram.com/p/...",
-                "post_type": "photo",  (string with specific value)
-                "post_text": "The Hollywood Reporter",   (string with the post text)
-                "post_hash_tags": list of str,
-                "post_mentions": list of str,
-                "posts_grade": "b" (string with specific value grade)
+               "top_3_posts": [
+                    {
+                        "post_url": "https://www.instagram.com/p/...",
+                        "post_type": "photo",  (string with specific value)
+                        "post_text": "The Hollywood Reporter",   (string with the post text)
+                        "post_hash_tags": list of str,
+                        "post_mentions": list of str,
+                        "posts_grade": "b" (string with specific value grade)
+                        "post_image": "link to post image"
+                    },
+                    ...
+                ]
             },
             status=status.HTTP_200_OK)
         """
@@ -119,22 +129,49 @@ class UserFeedView(APIView):
             entry['date'] = datetime.fromisoformat(entry['date'].rstrip("Z")).date()
         result_data["posts_month"] = []
         result_data["posts_year"] = []
-        most_popular_post = None
-        most_engaged_post = 0
+        most_popular_posts = [None] * 3  # top 3 posts in ascending order
+        most_engaged_posts = [0] * 3  # the engagement on the top 3 posts in ascending order
+        smallest_engaged_post_idx = 0
+
+        # TODO: make sure that the dates represent a full month or a full year
         for entry in filter_data:
             engagement_rate = [entry["likes"], entry["comments"]]
-            if one_month_ago <= entry['date'] <= current_date:
-                result_data["posts_month"].append(engagement_rate)
-            result_data["posts_year"].append(engagement_rate)
-            if most_engaged_post < sum(engagement_rate):
-                most_popular_post = entry
 
-        if most_popular_post is not None:
-            result_data["post_url"] = most_popular_post["postUrl"]
-            result_data["post_type"] = most_popular_post["type"]
-            result_data["post_text"] = most_popular_post["text"]
-            result_data["post_hash_tags"] = most_popular_post["hashTags"]
-            result_data["post_mentions"] = []
-            for mention in most_popular_post["mentions"]:
-                result_data["post_mentions"].append(mention["name"])
-            result_data["post_grade"] = most_popular_post["mainGrade"]
+            if one_month_ago <= entry['date'] <= current_date:
+                result_data["posts_month"].append({
+                    'date': entry['date'],
+                    'likes': engagement_rate[0],
+                    'comments': engagement_rate[1]
+                })
+
+            result_data["posts_year"].append({
+                'date': entry['date'],
+                'likes': engagement_rate[0],
+                'comments': engagement_rate[1]
+            })
+
+            engagement_sum = sum(engagement_rate)
+            if most_engaged_posts[smallest_engaged_post_idx] < engagement_sum and entry["type"] == "photo":
+                most_popular_posts[smallest_engaged_post_idx] = entry
+                most_engaged_posts[smallest_engaged_post_idx] = engagement_sum
+                # reset smallesr engaged post index
+                for i in range(3):
+                    if most_engaged_posts[i] < most_engaged_posts[smallest_engaged_post_idx]:
+                        smallest_engaged_post_idx = i
+
+        result_data["top_3_posts"] = []
+        for i in range(3):
+            most_popular_post = most_popular_posts[i]
+            current_post = {}
+            if most_popular_post is not None:
+                current_post["post_image"] = most_popular_post["postImage"]
+                current_post["post_url"] = most_popular_post["postUrl"]
+                current_post["post_type"] = most_popular_post["type"]
+                current_post["post_text"] = most_popular_post["text"]
+                current_post["post_hash_tags"] = most_popular_post["hashTags"]
+                current_post["post_mentions"] = []
+                for mention in most_popular_post["mentions"]:
+                    current_post["post_mentions"].append(mention["name"])
+                current_post["post_grade"] = most_popular_post["mainGrade"]
+            result_data["top_3_posts"].append(current_post)
+
