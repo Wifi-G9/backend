@@ -22,7 +22,7 @@ class InstagramSearch(APIView):
         :return Response with data outlined in docs/endpoints/README.md, status code will be 404 if an error has
         occurred or 200 if the data was received and parsed correctly
         """
-        return Response(self.mock_data(), status=status.HTTP_200_OK)
+        # return Response(self.mock_data(), status=status.HTTP_200_OK)
         # if your .env file does not have this key, a mock data for debugging will be sent as the api has a limit on
         # the requests
         api_key = os.environ.get("RAPID_API_KEY")

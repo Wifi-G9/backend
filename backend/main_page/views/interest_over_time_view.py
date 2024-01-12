@@ -23,13 +23,13 @@ class InterestOverTime(APIView):
         word_searched = request.query_params.get("search", None)
         time_of_interest = request.query_params.get("time", None)
 
-        weeks = 12 if time_of_interest is not None and time_of_interest == "year" else 4
+        weeks = 52 if time_of_interest is not None and time_of_interest == "year" else 4
 
         try:
             pytrends = TrendReq(hl='en-US', tz=360)
             pytrends.build_payload(kw_list=[word_searched],
                                    timeframe=f'{date.today() - timedelta(weeks=weeks)} {date.today()}')
-            response = pytrends.interest_over_time()[word_searched]
+            response = pytrends.interest_over_time_(word_searched)  # [word_searched]
             interest_over_time = [interest for interest in response]
         except KeyError:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
