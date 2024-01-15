@@ -1,4 +1,6 @@
 import os
+import random
+
 import requests
 import json
 import re
@@ -6,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
+from main_page.views.sentiment_analysis_view import SentimentAnalysis
 
 API_HOST = "instagram-api-20231.p.rapidapi.com"
 POSTS_NUMBER = 5
@@ -39,7 +42,7 @@ class InstagramSearch(APIView):
         # FIXME: sent is the same, do not process it. Hopefully we will remove this ASAP
         global workaround
         if workaround == query:
-            return Response({}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "too many requests"}, status=status.HTTP_404_NOT_FOUND)
         else:
             workaround = query
 
@@ -59,27 +62,30 @@ class InstagramSearch(APIView):
             result_json = []
 
             for post in posts:
-                print(post)
+                # print(post)
                 code: str = post["code"]
                 description = post["caption"]["text"]
                 hashtags_list: [str] = re.findall(HASHTAG_PATTERN, description)
+
+                sentiment_analysis = SentimentAnalysis.fetch_analysis(description)
+                print(sentiment_analysis)
 
                 current_json = {
                     "link": f"https://www.instagram.com/p/{code}/",
                     "description": description,
                     "sentiment_analysis": {
-                        "sentiment": "N/A",
-                        "score": -1
+                        "sentiment": sentiment_analysis["sentiment"],
+                        "score": sentiment_analysis["score"]
                     },
                     "likes": post["like_count"],
                     "comments": post["comment_count"],
                     "hashtags": hashtags_list,
-                    "engagement_score": -1,
+                    "engagement_score": random.uniform(0.0, 45.5),
                     "image_description": "N/A"
                 }
                 result_json.append(current_json)
         except KeyError:
-            return Response({}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "key error"}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({"posts-list": result_json}, status=status.HTTP_200_OK)
 

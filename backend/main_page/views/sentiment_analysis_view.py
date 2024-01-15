@@ -10,20 +10,10 @@ API_HOST = "text-analysis12.p.rapidapi.com"
 
 class SentimentAnalysis(APIView):
     @staticmethod
-    def get(request: Request) -> Response:
-        """
-        Calls the Sentiment Analysis API and returns the sentiment analysis result.
-        :param request: request
-        :return: Tuple[str, int]
-        """
-
+    def fetch_analysis(text: str):
         api_key = os.environ.get("RAPID_API_KEY")
         if api_key is None:
-            return Response({}, status=status.HTTP_404_NOT_FOUND)
-
-        text = request.query_params.get("text", None)
-        if text is None:
-            return Response({}, status=status.HTTP_404_NOT_FOUND)
+            return None
 
         url = "https://text-analysis12.p.rapidapi.com/sentiment-analysis/api/v1.1"
         payload = {
@@ -46,4 +36,23 @@ class SentimentAnalysis(APIView):
             "score": sentiment_score
         }
 
-        return Response(result_json, status=status.HTTP_200_OK)
+        return result_json
+
+    @staticmethod
+    def get(request: Request) -> Response:
+        """
+        Calls the Sentiment Analysis API and returns the sentiment analysis result.
+        :param request: request
+        :return: Tuple[str, int]
+        """
+
+        text = request.query_params.get("text", None)
+        if text is None:
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
+
+        result = SentimentAnalysis.fetch_analysis(text)
+
+        if result is None:
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(result, status=status.HTTP_200_OK)
