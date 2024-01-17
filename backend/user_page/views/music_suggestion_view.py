@@ -8,7 +8,7 @@ import requests
 
 class MusicSuggestion(APIView):
     @staticmethod
-    def get(request):
+    def get(request, username=None):
         """
         Get top 5 music suggestions based on the provided description.
 
@@ -22,6 +22,9 @@ class MusicSuggestion(APIView):
         - Status Code: 200 OK
         - Body: JSON object with a 'music' key containing a list of 5 music suggestion links.
         """
+        if username is None:
+            return Response({"error": "Username was not provided, maybe the user is not logged."}, status=status.HTTP_401_UNAUTHORIZED)
+
         description = request.query_params.get('description', '')
         if not description:
             return Response({"error": "Description parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
